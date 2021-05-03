@@ -1,0 +1,27 @@
+---
+Cache:
+  ConnectionParams: "host=/tmp dbname=x-company_devices sslmode=disable"
+  # number of parallel requests to Nominatim, same number is used for Postgres cache connections
+  MaxOpenConnections: 5 # keepalive should be enabled on a server for efficient http requests
+DataProcessed:
+  ConnectionParams: "host=/tmp dbname=x-company_devices sslmode=disable"
+  # number of Postgres connections
+  MaxOpenConnections: 5
+Decoder: "0.0.0.0:6589"
+EventsPool:
+  ConnectionParams: "host=/tmp dbname=x-company_devices sslmode=disable"
+  # number of Postgres connections
+  MaxOpenConnections: 5
+GRPC:
+  Host: "0.0.0.0:6589"
+Kafka:
+  Broker: "xxx.xxx.xxx.xxx:9092"
+  GroupId: geodecoder_0
+  Topic: geo_decoding
+Xxdb:
+  Host: "localhost:52275"
+  Pass: xxx
+  User: x-company
+InfluxDb:
+  Host: "xxx.xxx.xxx.xxx:8086"
+  Database: "devices"

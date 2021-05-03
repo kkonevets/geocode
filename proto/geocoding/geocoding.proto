@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+option go_package = "github.com/X-Company/proto/geocoding";
+
+package geocoding;
+
+service Geocoding {
+  // returns point addresses (in multiple languages)
+  rpc Decode (Point) returns (Addresses) {}
+  // returns lat/lon of an address
+  rpc Encode (Address) returns (Point) {}
+  // returns addresses (in multiple languages) for each point in a stream
+  rpc DecodeMany (Points) returns (stream Addresses) {}
+  // returns point for each address in a stream
+  rpc EncodeMany (Addresses) returns (stream Point) {}
+  // same as DecodeMany, but using bidirectional stream
+  rpc DecodeBi (stream Point) returns (stream Addresses) {}
+  // same as EncodeMany, but using bidirectional stream
+  rpc EncodeBi (stream Address) returns (stream Point) {}
+}
+
+enum Source {
+  CACHE = 0;
+  NOMINATIM = 1;
+  YANDEX = 2;
+  GOOGLE = 3;
+}
+
+enum Status {
+  OK = 0;
+  NOT_FOUND = 1;
+  BAD_REQUEST = 2;
+  INTERNAL_SERVER_ERROR = 3;
+}
+
+message Point {
+  int64 id = 1;
+  double lat = 2;
+  double lon = 3;
+  Source source = 4;
+  Status status = 5;
+  string error = 6; // error description
+}
+
+message Points {
+  repeated Point items = 1;
+}
+
+message Address {
+  int64 id = 1; // Address.id == Point.id for encoding
+  string data = 2; // address as a string
+  string lang = 3; // could be "ru-RU", "en-US" or ""
+  Source source = 4;
+}
+
+message Addresses {
+  int64 id = 1; // Addresses.id == Point.id for decoding
+  repeated Address items = 2;
+  Status status = 3;
+  string error = 4; // error description
+}

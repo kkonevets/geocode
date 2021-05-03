@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+option go_package = "github.com/X-Company/proto/xxdb";
+
+package xxdb;
+
+message Auth {
+   string user = 1;
+   string pass = 2;
+}
+
+message Query {
+  enum Type {
+    INSERT = 0;
+    GET = 1;
+  }
+
+  message Event{
+     int64 id = 1;
+     int64 device_hash = 2;
+     uint64 device_dt = 3; // datetime YYYYMMDDHHMMSS UTC+0
+     bool hide = 4; // hide event fromb user
+     int64 mrn = 5;
+     string extra = 6; // extra fields
+  }
+
+   Type type = 1;
+   bool with_merge = 2; // merge event with equal device_hash and date_time
+  repeated Event events = 3;
+}
+
+message Response {
+  enum Status {
+    OK = 0;
+    UNAUTHORIZED = 1; // client could't authorized
+    CLIENT_ERROR = 2;
+    SERVER_ERROR = 3;
+    OTHER_ERROR = 4;
+  }
+
+  message Event {
+     int64 id = 1;
+     string raw_data = 2;
+     Status status = 3;
+  }
+
+   Status status = 1;
+   string emsg = 2; // string with error
+  repeated Event events = 3;
+}
